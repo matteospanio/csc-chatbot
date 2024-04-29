@@ -1,0 +1,7 @@
+.env
+.venv
+.vscode
+data/**/*.pdf
+chroma
+*.pkl
+__pycache__

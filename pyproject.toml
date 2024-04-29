@@ -1,0 +1,80 @@
+[tool.poetry]
+name = "chatbot"
+version = "0.1.0"
+description = "The CSC AI assistant"
+authors = ["Matteo Spanio <spanio@dei.unipd.it>"]
+readme = "README.md"
+packages = [{include = "chatbot", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+langchain = "^0.1.16"
+langchain-openai = "^0.1.4"
+python-dotenv = "^1.0.1"
+beautifulsoup4 = "^4.12.3"
+pyyaml = "^6.0.1"
+langchain-chroma = "^0.1.0"
+click = "^8.1.7"
+rich = "^13.7.1"
+pypdf = "^4.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.2"
+pre-commit = "^3.7.0"
+docformatter = "^1.7.5"
+black = "^24.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.docformatter]
+recursive = true
+wrap-summaries = 88
+blank = true
+
+[tool.ruff]
+line-length = 88
+src = ["src", "tests"]
+extend-exclude = ["docs"]
+select =[
+    "A",    # builtins
+    "B",    # bugbear
+    "BLE",  # blind exception
+    "C4",   # comprehensions
+    "C90",
+    "COM",  # commas
+    "D",    # pydocstyle
+    "DTZ",  # datetime
+    "E",    # pycodestyle
+    "EM",   # error messages
+    "F",    # pyflakes
+    "G",    # logging
+    "I",    # isort
+    "PIE",  # flake-8 pie
+    "PL",   # pylint
+    "PT",   # pytest
+    "PTH",  # use pathlib
+    "N",    # pep-naming
+    "RUF",  # ruff specific rules
+    "S",    # bandit
+    "SIM",  # flake8-simplify
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warning
+]
+fixable = ["ALL"]
+target-version = "py310"
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
+ignore-decorators = ["typing.overload"]
+
+[tool.ruff.pylint]
+max-args = 6
+max-returns = 5
+
+[tool.black]
+color = true
+line-length = 88
+target-version = ["py310"]
