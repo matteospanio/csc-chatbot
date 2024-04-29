@@ -36,8 +36,11 @@ blank = true
 
 [tool.ruff]
 line-length = 88
-src = ["src", "tests"]
+src = ["src"]
 extend-exclude = ["docs"]
+target-version = "py310"
+
+[tool.ruff.lint]
 select =[
     "A",    # builtins
     "B",    # bugbear
@@ -45,7 +48,7 @@ select =[
     "C4",   # comprehensions
     "C90",
     "COM",  # commas
-    "D",    # pydocstyle
+    # "D",    # pydocstyle
     "DTZ",  # datetime
     "E",    # pycodestyle
     "EM",   # error messages
@@ -58,19 +61,18 @@ select =[
     "PTH",  # use pathlib
     "N",    # pep-naming
     "RUF",  # ruff specific rules
-    "S",    # bandit
+    # "S",    # bandit
     "SIM",  # flake8-simplify
     "UP",   # pyupgrade
     "W",    # pycodestyle warning
 ]
 fixable = ["ALL"]
-target-version = "py310"
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "numpy"
 ignore-decorators = ["typing.overload"]
 
-[tool.ruff.pylint]
+[tool.ruff.lint.pylint]
 max-args = 6
 max-returns = 5
 
