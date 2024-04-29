@@ -41,5 +41,49 @@ pip install -r requirements.txt
 If you have Poetry installed, you can run the chatbot with the following command:
 
 ```bash
-poetry run chatbot
+poetry run chatbot --help
 ```
+
+or enter the virtual environment with:
+
+```bash
+poetry shell
+```
+
+and then run the chatbot with:
+
+```bash
+chatbot --help
+```
+
+If you installed the project with pip, you can run the chatbot with:
+
+```bash
+chatbot --help
+```
+
+If you installed only the dependencies with pip, you can run the chatbot with:
+
+```bash
+python src/chatbot/ --help
+```
+
+## Features/Commands
+
+The CLI chatbot has the following commands:
+
+- `--help`: show the help message
+- `--version`: show the version of the chatbot
+- `chat`: start the chatbot
+- `setup`: setup the chatbot
+
+`chat` starts the chatbot and you can ask questions about the CSC and its people.
+
+`setup` is used to setup the chatbot memory. It will read the data from the `data` directory and store it in the chatbot memory. It accepts two flags:
+
+- `--with-pdf`: Load the PDF files in the `data/pdf` directory, extract the text and store it in the chatbot memory
+- `--with-web`: Load the web pages in the `data/csc.yml` file, extract the text and store it in the chatbot memory
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
