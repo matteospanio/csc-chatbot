@@ -1,7 +1,8 @@
 import click
 from dotenv import load_dotenv
-from chatbot.memory import create_memory
+
 from chatbot.chat import main_loop
+from chatbot.memory import create_memory
 
 
 @click.group()
