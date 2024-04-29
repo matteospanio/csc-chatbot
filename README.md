@@ -36,7 +36,7 @@ Otherwise you can install just the dependencies with pip:
 pip install -r requirements.txt
 ```
 
-## Usage
+## Configuration
 
 Configuration is done through the `config.yml` to set the models parameters. In addition you need to set some environment variables:
 
@@ -48,7 +48,9 @@ Configuration is done through the `config.yml` to set the models parameters. In 
 
 You can run `make env` to create a `.env` file with the default values (you will need to set the OpenAI API key).
 
+## Usage
 
+### with poetry
 If you have Poetry installed, you can run the chatbot with the following command:
 
 ```bash
@@ -67,6 +69,7 @@ and then run the chatbot with:
 chatbot --help
 ```
 
+### without poetry
 If you installed the project with pip, you can run the chatbot with:
 
 ```bash
