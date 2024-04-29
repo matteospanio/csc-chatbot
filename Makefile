@@ -81,3 +81,7 @@ update: ## update dependencies
 install: ## install the package to the active Python's site-packages
 	@poetry install
 	@poetry run pre-commit install
+
+.PHONY: env
+env: ## create a default .env file
+	@cp .env.sample .env

@@ -38,6 +38,17 @@ pip install -r requirements.txt
 
 ## Usage
 
+Configuration is done through the `config.yml` to set the models parameters. In addition you need to set some environment variables:
+
+- OPENAI_API_KEY to use the OpenAI API
+- PDF_PATH, the path to the PDF files to load
+- DATA_PATH, the path to the web links to load
+- CHROMA_PATH the folder name where to store the chroma database files
+- CHAT_MEMORY the file name where to store the chat messages history
+
+You can run `make env` to create a `.env` file with the default values (you will need to set the OpenAI API key).
+
+
 If you have Poetry installed, you can run the chatbot with the following command:
 
 ```bash
