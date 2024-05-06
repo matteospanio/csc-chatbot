@@ -1,7 +1,5 @@
 import os
-from pathlib import Path
 
-import yaml
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.memory import ChatMessageHistory
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -16,18 +14,19 @@ from rich.prompt import Prompt
 from chatbot.memory import get_memory, load_chat_messages, save_chat_messages
 
 
-def main_loop():
-    with Path("config.yml").open() as f:
-        config = yaml.safe_load(f)
-
+def main_loop(model, embedding, temperature, sys_prompt, api_key):
     console = Console()
 
     # create models
     llm = ChatOpenAI(
-        model=config["models"]["chat"]["name"],
-        temperature=config["models"]["chat"]["temperature"],
+        model=model,
+        temperature=temperature,
+        api_key=api_key,
     )
-    embeddings = OpenAIEmbeddings(model=config["models"]["embeddings"]["name"])
+    embeddings = OpenAIEmbeddings(
+        model=embedding,
+        api_key=api_key,
+    )
     out_parser = StrOutputParser()
 
     messages = load_chat_messages()
@@ -37,7 +36,7 @@ def main_loop():
         [
             (
                 "system",
-                config["sys_prompt"],
+                sys_prompt,
             ),
             MessagesPlaceholder(variable_name="messages"),
         ],

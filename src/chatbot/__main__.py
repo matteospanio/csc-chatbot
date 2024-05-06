@@ -1,5 +1,5 @@
 import sys
 
-from chatbot.cli import cli
+from chatbot.cli.app import chatbot
 
-sys.exit(cli())
+sys.exit(chatbot())

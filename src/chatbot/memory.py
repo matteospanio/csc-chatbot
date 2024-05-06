@@ -1,7 +1,7 @@
-import os
 import pickle
 from pathlib import Path
 
+import click
 import yaml
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
@@ -12,16 +12,16 @@ from langchain_core.embeddings import Embeddings
 from langchain_core.messages import BaseMessage
 from langchain_openai import OpenAIEmbeddings
 
-# error messages
-MISSING_CHROMA_PATH = "CHROMA_PATH environment variable not set."
-MISSING_CHAT_MEMORY = "CHAT_MEMORY environment variable not set."
+from chatbot.cli import __app_name__
+
+APP_DIR = Path(click.get_app_dir(__app_name__))
+MEMORY = APP_DIR / "memory"
+CHAT_MEMORY = MEMORY / "history.pkl"
+CHROMA_PATH = MEMORY / "chroma"
 
 
 def load_documents() -> list[Document]:
-    path = os.getenv("DATA_PATH")
-    if path is None:
-        msg = "DATA_PATH environment variable not set."
-        raise Exception(msg)
+    path = ""
     with Path(path).open() as f:
         data = yaml.safe_load(f)
     pages = data["pages"]
@@ -30,37 +30,32 @@ def load_documents() -> list[Document]:
 
 
 def load_chat_messages() -> list[BaseMessage]:
-    path = os.getenv("CHAT_MEMORY")
-    if path is None:
-        raise Exception(MISSING_CHAT_MEMORY)
-    messages_path = Path(path)
-    if not messages_path.exists():
+    if not CHAT_MEMORY.exists():
         return []
-    with messages_path.open("rb") as f:
+    with CHAT_MEMORY.open("rb") as f:
         return pickle.load(f)
 
 
 def save_chat_messages(messages: list[BaseMessage]) -> None:
-    path = os.getenv("CHAT_MEMORY")
-    if path is None:
-        raise Exception(MISSING_CHAT_MEMORY)
-    with Path(path).open("wb") as f:
+    if not CHAT_MEMORY.parent.exists():
+        CHAT_MEMORY.parent.mkdir()
+    with CHAT_MEMORY.open("wb") as f:
         pickle.dump(messages, f)
 
 
-def load_pdfs() -> list[Document]:
-    path = os.getenv("PDF_PATH")
-    if path is None:
-        msg = "PDF_PATH environment variable not set."
-        raise Exception(msg)
+def load_pdfs(path: str) -> list[Document]:
     loader = PyPDFDirectoryLoader(path)
     return loader.load()
 
 
-def split_text(documents: list[Document]) -> list[Document]:
+def split_text(
+    documents: list[Document],
+    chunk_size: int,
+    overlap: int,
+) -> list[Document]:
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2500,
-        chunk_overlap=150,
+        chunk_size=chunk_size,
+        chunk_overlap=overlap,
         length_function=len,
         add_start_index=True,
     )
@@ -74,47 +69,48 @@ def split_text(documents: list[Document]) -> list[Document]:
 
 def get_memory(embeddings: Embeddings) -> Chroma:
     """Get the chroma database."""
-    path = os.getenv("CHROMA_PATH")
-    if path is None:
-        raise Exception(MISSING_CHROMA_PATH)
-    return Chroma(embedding_function=embeddings, persist_directory=path)
+    return Chroma(embedding_function=embeddings, persist_directory=str(CHROMA_PATH))
 
 
 def create_database_from_docs(docs: list[Document], model: Embeddings) -> Chroma:
     # save to chroma
-    path = os.getenv("CHROMA_PATH")
-    if path is None:
-        raise Exception(MISSING_CHROMA_PATH)
     db = Chroma.from_documents(
         documents=docs,
         embedding=model,
-        persist_directory=path,
+        persist_directory=str(CHROMA_PATH),
     )
 
     return db
 
 
-def create_memory(with_pdf: bool, with_web: bool) -> None:
+def create_memory(
+    api_key,
+    resource: Path,
+    file_format: str,
+    chunk_size: int,
+    overlap: int,
+) -> None:
     """Create a chroma database from the documents."""
-    path = os.getenv("CHROMA_PATH")
-    if path is None:
-        raise Exception(MISSING_CHROMA_PATH)
-    if Path(path).exists():
+    if CHROMA_PATH.exists():
         msg = "Chroma database already exists."
         raise Exception(msg)
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-large", api_key=api_key)
 
     # load documents
     chunks = []
 
-    if with_web:
-        docs = load_documents()
-        chunks.extend(split_text(docs))
+    if not resource.is_dir():
+        msg = "È stato inserito un file come fonte di risorse."
+        raise Exception(msg)
 
-    if with_pdf:
-        pdfs = load_pdfs()
-        chunks.extend(split_text(pdfs))
+    if file_format == "web":
+        docs = load_documents()
+        chunks.extend(split_text(docs, chunk_size, overlap))
+
+    if file_format == "pdf":
+        pdfs = load_pdfs(resource)
+        chunks.extend(split_text(pdfs, chunk_size, overlap))
 
     # save to chroma
     create_database_from_docs(chunks, embeddings)
