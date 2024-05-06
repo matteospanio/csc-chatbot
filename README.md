@@ -46,8 +46,6 @@ Configuration is done through the `config.yml` to set the models parameters. In 
 - CHROMA_PATH the folder name where to store the chroma database files
 - CHAT_MEMORY the file name where to store the chat messages history
 
-You can run `make env` to create a `.env` file with the default values (you will need to set the OpenAI API key).
-
 ## Usage
 
 ### with poetry
@@ -89,7 +87,7 @@ The CLI chatbot has the following commands:
 - `--help`: show the help message
 - `--version`: show the version of the chatbot
 - `chat`: start the chatbot
-- `setup`: setup the chatbot
+- `ingest`: setup the chatbot
 
 `chat` starts the chatbot and you can ask questions about the CSC and its people.
 
