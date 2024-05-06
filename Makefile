@@ -64,13 +64,13 @@ activate: ## activate the virtual environment
 .PHONY: format
 format: ## format code
 	@echo "Format docstrings"
-	@$(POETRY) docformatter --config ./pyproject.toml --recursive --in-place ./src
+	@$(POETRY) docformatter --config ./pyproject.toml --recursive --in-place ./src ./tests
 	@echo "Format code with black"
 	@$(POETRY) black .
 
 .PHONY: lint
 lint: ## check style with pylint
-	$(POETRY) ruff check ./src
+	$(POETRY) ruff check ./src ./tests --fix
 
 .PHONY: update
 update: ## update dependencies
@@ -81,7 +81,3 @@ update: ## update dependencies
 install: ## install the package to the active Python's site-packages
 	@poetry install
 	@poetry run pre-commit install
-
-.PHONY: env
-env: ## create a default .env file
-	@cp .env.sample .env
