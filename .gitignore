@@ -6,3 +6,5 @@ data/**/*.pdf
 chroma
 *.pkl
 __pycache__
+.pytest_cache
+.hypothesis
