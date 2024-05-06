@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "chatbot"
-version = "0.1.0"
+version = "0.2.0"
 description = "The CSC AI assistant"
 authors = ["Matteo Spanio <spanio@dei.unipd.it>"]
 readme = "README.md"
 packages = [{include = "chatbot", from = "src"}]
 
 [tool.poetry.scripts]
-chatbot = "chatbot.cli:cli"
+chatbot = "chatbot.cli.app:chatbot"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
@@ -20,6 +20,8 @@ langchain-chroma = "^0.1.0"
 click = "^8.1.7"
 rich = "^13.7.1"
 pypdf = "^4.2.0"
+click-extra = "^4.7.5"
+toml = "^0.10.2"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -27,6 +29,8 @@ ruff = "^0.4.2"
 pre-commit = "^3.7.0"
 docformatter = "^1.7.5"
 black = "^24.4.2"
+pytest = "^8.2.0"
+hypothesis = "^6.100.4"
 
 [build-system]
 requires = ["poetry-core"]
@@ -39,7 +43,7 @@ blank = true
 
 [tool.ruff]
 line-length = 88
-src = ["src"]
+src = ["src", "tests"]
 extend-exclude = ["docs"]
 target-version = "py310"
 
