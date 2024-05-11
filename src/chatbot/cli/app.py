@@ -1,3 +1,5 @@
+"""The main entry point for the chatbot CLI application."""
+
 import logging
 from pathlib import Path
 from typing import Annotated
@@ -133,7 +135,7 @@ def chat(
 @click.help_option("-h", "--help")
 @click.pass_context
 @docstring_decorator(help_text="Setup the chatbot.")
-def ingest(
+def ingest(  # noqa: D103
     ctx: click.Context,
     resource: Annotated[
         Path,
@@ -162,7 +164,7 @@ def configure():
     help_text="Set a configuration value.\n\n"
     "Example: chatbot configure set chatbot.chat.temperature 0.7.",
 )
-def set(  # noqa: A001
+def set(  # noqa: D103, A001
     key: Annotated[str, "The configuration key. Use dot notation for nested keys."],
     value: Annotated[str, "The configuration value."],
 ):

@@ -1,3 +1,5 @@
+"""Memory management for the chatbot."""
+
 import pickle
 from pathlib import Path
 
@@ -21,6 +23,7 @@ CHROMA_PATH = MEMORY / "chroma"
 
 
 def load_documents() -> list[Document]:
+    """Load the documents from filesystem."""
     path = ""
     with Path(path).open() as f:
         data = yaml.safe_load(f)
@@ -30,13 +33,29 @@ def load_documents() -> list[Document]:
 
 
 def load_chat_messages() -> list[BaseMessage]:
+    """Load the chat messages from the memory.
+
+    Returns
+    -------
+    list[BaseMessage]
+        The list of chat messages.
+
+    """
     if not CHAT_MEMORY.exists():
         return []
     with CHAT_MEMORY.open("rb") as f:
-        return pickle.load(f)
+        return pickle.load(f)  # noqa: S301
 
 
 def save_chat_messages(messages: list[BaseMessage]) -> None:
+    """Save the chat messages to the memory.
+
+    Parameters
+    ----------
+    messages : list[BaseMessage]
+        The list of chat messages to save.
+
+    """
     if not CHAT_MEMORY.parent.exists():
         CHAT_MEMORY.parent.mkdir()
     with CHAT_MEMORY.open("wb") as f:
@@ -44,6 +63,7 @@ def save_chat_messages(messages: list[BaseMessage]) -> None:
 
 
 def load_pdfs(path: str) -> list[Document]:
+    """Load the pdfs from the path."""
     loader = PyPDFDirectoryLoader(path)
     return loader.load()
 
@@ -53,6 +73,7 @@ def split_text(
     chunk_size: int,
     overlap: int,
 ) -> list[Document]:
+    """Split the text into chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=overlap,
@@ -73,6 +94,7 @@ def get_memory(embeddings: Embeddings) -> Chroma:
 
 
 def create_database_from_docs(docs: list[Document], model: Embeddings) -> Chroma:
+    """Create a chroma database from the documents."""
     # save to chroma
     db = Chroma.from_documents(
         documents=docs,

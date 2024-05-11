@@ -1,3 +1,5 @@
+"""Constants for the CLI module."""
+
 HEADER = """
      ,gggg,
    ,88\"""Y8b, ,dPYb,                   I8    ,dPYb,                    I8

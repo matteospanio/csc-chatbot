@@ -1,3 +1,5 @@
+"""Decorators for the CLI commands."""
+
 import inspect
 import re
 
@@ -14,6 +16,8 @@ def __parse_metadata(text: str) -> str | None:
 
 
 def docstring_decorator(help_text):
+    """Add a formatted help text to the docstring of the function."""
+
     def wrapper(func):
         argument_doc = help_text + "\n\n\b\n"
         args = inspect.signature(func).parameters

@@ -1,3 +1,5 @@
+"""Configuration constants for the chatbot."""
+
 from pathlib import Path
 
 import toml
@@ -29,6 +31,7 @@ DEFAULT_CONFIG = {
 
 
 def create_default(folder: Path):
+    """Create the default configuration file."""
     comments = """# This is the chatbot configuration file.
 #
 # Modify the following fields as you want.
@@ -47,20 +50,15 @@ def create_default(folder: Path):
 
 
 def load_config(folder: Path):
+    """Load the configuration file."""
     with Path(folder / CONFIG_FILE).open("r") as f:
         return toml.load(f)
 
 
 def set_config_value(folder: Path, key: str, value: str):
+    """Set a configuration value."""
     config = load_config(folder)
     keys = key.split(".")
     depth_set(config, keys, value)
     with Path(folder / CONFIG_FILE).open("w") as f:
         toml.dump(config, f)
-
-
-if __name__ == "__main__":
-    from pprint import pprint as pp
-
-    pp(DEFAULT_CONFIG)
-    create_default(Path())

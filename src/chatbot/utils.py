@@ -1,8 +1,11 @@
+"""Utility functions that are used in the chatbot."""
+
 from collections.abc import MutableMapping
 from typing import Any
 
 
 def flatten_dict(d, parent_key="", sep="."):
+    """Flatten a dictionary."""
     items = []
     for k, v in d.items():
         new_key = parent_key + sep + k if parent_key else k
@@ -14,6 +17,7 @@ def flatten_dict(d, parent_key="", sep="."):
 
 
 def depth_set(d: dict, keys: list[str], value: Any) -> None:
+    """Set a value in a nested dictionary."""
     if len(keys) == 0:
         msg = "keys must have at least one element"
         raise ValueError(msg)

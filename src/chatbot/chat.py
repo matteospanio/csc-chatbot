@@ -1,3 +1,5 @@
+"""Play with chatbot main loop."""
+
 import os
 
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -15,6 +17,7 @@ from chatbot.memory import get_memory, load_chat_messages, save_chat_messages
 
 
 def main_loop(model, embedding, temperature, sys_prompt, api_key):
+    """Chat with the chatbot."""
     console = Console()
 
     # create models
@@ -60,6 +63,7 @@ def loop(
     retriever: VectorStoreRetriever,
     console: Console,
 ) -> None:
+    """Chatbot loop."""
     question = Prompt.ask("\n[bold cyan]>>> You")
 
     history.add_user_message(question)
@@ -77,5 +81,6 @@ def loop(
 
 
 def exit_handler(history: ChatMessageHistory) -> int:
+    """Save chat history on exit."""
     save_chat_messages(history.messages)
     return os.EX_OK
