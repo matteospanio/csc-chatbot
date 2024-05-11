@@ -11,28 +11,11 @@ ifeq ($(UNAME), Windows)
 	OPEN = start
 endif
 
-define PRINT_HELP_PYSCRIPT
-import re, sys
-
-BOLD = '\033[1m'
-BLUE = '\033[94m'
-END = '\033[0m'
-
-print("Usage: make <target>\n")
-print(BOLD + "%-20s%s" % ("target", "description") + END)
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z0-9_/\\-]+\.?.*?):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print( BLUE + "%-20s" % (target) + END + "%s" % (help))
-endef
-export PRINT_HELP_PYSCRIPT
-
 default: help
 
 .PHONY: help
 help: ## Show this help
-	@$(POETRY) python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@$(POETRY) python scripts/print_make_help.py < $(MAKEFILE_LIST)
 
 .PHONY: clean clean-build clean-pyc clean-test
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
@@ -55,6 +38,7 @@ clean-test:
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
+	rm -rf .hypothesis
 	rm -fr .pytest_cache
 
 .PHONY: activate
@@ -64,7 +48,7 @@ activate: ## activate the virtual environment
 .PHONY: format
 format: ## format code
 	@echo "Format docstrings"
-	@$(POETRY) docformatter --config ./pyproject.toml --recursive --in-place ./src ./tests
+	@$(POETRY) docformatter --config ./pyproject.toml --in-place ./src ./tests
 	@echo "Format code with black"
 	@$(POETRY) black .
 
@@ -80,4 +64,13 @@ update: ## update dependencies
 .PHONY: install
 install: ## install the package to the active Python's site-packages
 	@poetry install
-	@poetry run pre-commit install
+	@$(POETRY) pre-commit install
+
+.PHONY: test
+test: ## run tests quickly with the default Python
+	@echo "Run test suite"
+	@$(POETRY) bash scripts/run_tests.sh
+
+htmlcov: ## create HTML coverage report
+	@$(POETRY) pytest --cov-report html --cov=src --cov-report term
+	$(OPEN) htmlcov/index.html

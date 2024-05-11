@@ -48,3 +48,5 @@ repos:
     -   id: docformatter
         additional_dependencies: [tomli]
         args: [--in-place]
+
+exclude: scripts/*
