@@ -49,4 +49,4 @@ repos:
         additional_dependencies: [tomli]
         args: [--in-place]
 
-exclude: scripts/*
+exclude: scripts
