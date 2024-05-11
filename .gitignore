@@ -8,3 +8,8 @@ chroma
 __pycache__
 .pytest_cache
 .hypothesis
+.tox
+.coverage*
+coverage.xml
+htmlcov
+file:
