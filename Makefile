@@ -22,10 +22,6 @@ clean: ## remove all build, test, coverage and Python artifacts
 	@$(POETRY) bash scripts/clean.sh
 	$(POETRY) ruff clean
 
-.PHONY: activate
-activate: ## activate the virtual environment
-	poetry shell
-
 .PHONY: format
 format: ## format code
 	@echo "Format docstrings"
