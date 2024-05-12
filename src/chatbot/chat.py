@@ -1,6 +1,7 @@
 """Play with chatbot main loop."""
 
 import os
+from typing import Any
 
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.memory import ChatMessageHistory
@@ -17,8 +18,8 @@ from chatbot.memory import get_memory, load_chat_messages, save_chat_messages
 
 
 def main_loop(
-    model,
-    embedding,
+    model: str,
+    embedding: str,
     temperature: float,
     sys_prompt: str,
     api_key: str,
@@ -30,11 +31,11 @@ def main_loop(
     llm = ChatOpenAI(
         model=model,
         temperature=temperature,
-        api_key=api_key,
+        api_key=api_key,  # type: ignore
     )
     embeddings = OpenAIEmbeddings(
         model=embedding,
-        api_key=api_key,
+        api_key=api_key,  # type: ignore
     )
     out_parser = StrOutputParser()
 
@@ -65,7 +66,7 @@ def main_loop(
 
 def loop(
     history: ChatMessageHistory,
-    chain: RunnableSerializable,
+    chain: RunnableSerializable[Any, Any],
     retriever: VectorStoreRetriever,
     console: Console,
 ) -> None:

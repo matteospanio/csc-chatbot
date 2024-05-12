@@ -62,7 +62,7 @@ def save_chat_messages(messages: list[BaseMessage]) -> None:
         pickle.dump(messages, f)
 
 
-def load_pdfs(path: str) -> list[Document]:
+def load_pdfs(path: str | Path) -> list[Document]:
     """Load the pdfs from the path."""
     loader = PyPDFDirectoryLoader(path)
     return loader.load()
@@ -106,7 +106,7 @@ def create_database_from_docs(docs: list[Document], model: Embeddings) -> Chroma
 
 
 def create_memory(
-    api_key,
+    api_key: str,
     resource: Path,
     file_format: str,
     chunk_size: int,
@@ -117,7 +117,10 @@ def create_memory(
         msg = "Chroma database already exists."
         raise Exception(msg)
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-large", api_key=api_key)
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-large",
+        api_key=api_key,  # type: ignore
+    )
 
     # load documents
     chunks = []

@@ -17,10 +17,13 @@ def __parse_metadata(text: str) -> str | None:
     return matches.group(1)
 
 
-def docstring_decorator(help_text: str) -> Callable[..., Any]:
+AnyFunction = Callable[..., Any]
+
+
+def docstring_decorator(help_text: str) -> AnyFunction:
     """Add a formatted help text to the docstring of the function."""
 
-    def wrapper(func: Callable[..., Any]) -> Callable[[Callable[...]], Any]:
+    def wrapper(func: AnyFunction) -> Callable[[AnyFunction], Any]:
         argument_doc = help_text + "\n\n\b\n"
         args = inspect.signature(func).parameters
 
