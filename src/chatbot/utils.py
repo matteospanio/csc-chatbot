@@ -1,22 +1,26 @@
 """Utility functions that are used in the chatbot."""
 
-from collections.abc import MutableMapping
+from collections.abc import Mapping, MutableMapping, Sequence
 from typing import Any
 
 
-def flatten_dict(d, parent_key="", sep="."):
+def flatten_dict(
+    d: Mapping[str, Any],
+    parent_key: str = "",
+    sep: str = ".",
+) -> dict[str, Any]:
     """Flatten a dictionary."""
-    items = []
+    items: list[Any] = []
     for k, v in d.items():
         new_key = parent_key + sep + k if parent_key else k
-        if isinstance(v, MutableMapping):
+        if isinstance(v, Mapping):
             items.extend(flatten_dict(v, new_key, sep=sep).items())
         else:
             items.append((new_key, v))
     return dict(items)
 
 
-def depth_set(d: dict, keys: list[str], value: Any) -> None:
+def depth_set(d: MutableMapping[str, Any], keys: Sequence[str], value: Any) -> None:
     """Set a value in a nested dictionary."""
     if len(keys) == 0:
         msg = "keys must have at least one element"

@@ -16,7 +16,13 @@ from rich.prompt import Prompt
 from chatbot.memory import get_memory, load_chat_messages, save_chat_messages
 
 
-def main_loop(model, embedding, temperature, sys_prompt, api_key):
+def main_loop(
+    model,
+    embedding,
+    temperature: float,
+    sys_prompt: str,
+    api_key: str,
+) -> int:
     """Chat with the chatbot."""
     console = Console()
 

@@ -39,7 +39,7 @@ APP_DIR = Path(click.get_app_dir(__app_name__))
 @click_extra.verbosity_option
 @click_extra.config_option
 @click.pass_context
-def chatbot(ctx: click.Context, embedding: str, openai_api_key: str):
+def chatbot(ctx: click.Context, embedding: str, openai_api_key: str) -> None:
     """Manage the chatbot with memories."""
     ctx.ensure_object(dict)
     ctx.obj["embedding"] = embedding
@@ -88,7 +88,7 @@ def chat(
     model: str,
     temperature: float,
     sys_prompt: str,
-):
+) -> None:
     """Chat with the chatbot."""
     embedding = ctx.obj["embedding"]
     api_key = ctx.obj["openai_api_key"]
@@ -144,7 +144,7 @@ def ingest(  # noqa: D103
     file_format: str,
     chunk_size: int,
     overlap: int,
-):
+) -> None:
     click.echo("Setting up the chatbot memories...")
     api_key = ctx.obj["openai_api_key"]
     create_memory(api_key, resource, file_format, chunk_size, overlap)
@@ -152,7 +152,7 @@ def ingest(  # noqa: D103
 
 @chatbot.group()
 @click.help_option("-h", "--help")
-def configure():
+def configure() -> None:
     """Handle chatbot configuration."""
 
 
@@ -167,13 +167,13 @@ def configure():
 def set(  # noqa: D103, A001
     key: Annotated[str, "The configuration key. Use dot notation for nested keys."],
     value: Annotated[str, "The configuration value."],
-):
+) -> None:
     set_config_value(APP_DIR, key, value)
 
 
 @configure.command()
 @click.help_option("-h", "--help")
-def show():
+def show() -> None:
     """Display to stdout the chatbot configuration file."""
     console = Console()
 
@@ -186,7 +186,7 @@ def show():
 
 @configure.command()
 @click.help_option("-h", "--help")
-def edit():
+def edit() -> None:
     """Edit the chatbot configuration file."""
     logger = logging.getLogger("app_logger")
     click.edit(filename=str(APP_DIR / "config.toml"))

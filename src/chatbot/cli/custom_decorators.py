@@ -2,6 +2,8 @@
 
 import inspect
 import re
+from collections.abc import Callable
+from typing import Any
 
 
 def __parse_metadata(text: str) -> str | None:
@@ -15,10 +17,10 @@ def __parse_metadata(text: str) -> str | None:
     return matches.group(1)
 
 
-def docstring_decorator(help_text):
+def docstring_decorator(help_text: str) -> Callable[..., Any]:
     """Add a formatted help text to the docstring of the function."""
 
-    def wrapper(func):
+    def wrapper(func: Callable[..., Any]) -> Callable[[Callable[...]], Any]:
         argument_doc = help_text + "\n\n\b\n"
         args = inspect.signature(func).parameters
 
